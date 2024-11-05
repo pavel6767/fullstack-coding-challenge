@@ -8,5 +8,6 @@ router.register(r'openCases', OpenCasesViewSet, basename='openCases')
 router.register(r'closedCases', ClosedCasesViewSet, basename='closedCases')
 router.register(r'topComplaints', TopComplaintTypeViewSet, basename='topComplaints')
 urlpatterns = [
+    path("allComplaints/", ComplaintViewSet.as_view({'get': 'list'}),name="allComplaints")
 ]
 urlpatterns += router.urls

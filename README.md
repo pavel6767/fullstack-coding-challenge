@@ -32,6 +32,10 @@ We’ve set up some starter code for you to use. For this challenge you will be 
     - `python manage.py createsuperuser` (If you want to access the django admin portal to view the data)
 5. Inside of the React app (`fullstack-coding-challenge/challenge/frontend`), run `npm install` to get all of your frontend dependencies.
 6. From there you should be able to start your frontend and backend using `npm start` and `python manage.py runserver`, respectively.
+7. start virtual env
+   1. `source env/bin/activate`
+   2. run python server
+   3. `deactivate`
 
 ## The API endpoints
 `localhost:8000`
