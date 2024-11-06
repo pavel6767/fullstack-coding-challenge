@@ -4,7 +4,7 @@ import Login from "./views/Login";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Home from "./views/Home";
 
-export default [
+const routes = [
   {
     path: "/",
     element: <Login />,
@@ -18,3 +18,5 @@ export default [
     ),
   },
 ];
+
+export default routes
