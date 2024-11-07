@@ -3,4 +3,12 @@ export const STATUS = {
   SUCCESS: "SUCCESS",
 };
 
-export const RESPONSE_OBJECT = (status) => ({ status });
+export const NETWORK_ERROR_TYPES = {
+  NOT_OK: 'NOT OK',
+  ERROR: 'ERROR'
+}
+
+export const ROUTES = {
+  LOGIN: "/",
+  HOME: "/home",
+};

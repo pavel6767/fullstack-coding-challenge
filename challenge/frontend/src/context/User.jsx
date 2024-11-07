@@ -1,7 +1,7 @@
 import React, { createContext, useState } from "react";
-import { STATUS } from "../utils";
+import { NETWORK_ERROR_TYPES, STATUS } from "../utils";
 import { clearToken, setToken } from "../utils/token";
-import { useMakeRequest } from "./useMakeRequest";
+import makeRequest from "../utils/makeRequest";
 
 const initialState = {
   id: "",
@@ -14,8 +14,13 @@ const initialState = {
 
 export const UserContext = createContext({ ...initialState });
 
+const MESSAGES = {
+  [NETWORK_ERROR_TYPES.NOT_OK]:
+    "Please double check username and password or contact Support",
+  [NETWORK_ERROR_TYPES.ERROR]: "Error, please contact support",
+};
+
 export const UserProvider = ({ children }) => {
-  const { makeRequest } = useMakeRequest();
   const [user, setUser] = useState(initialState);
 
   const login = async (userData) => {
@@ -24,15 +29,20 @@ export const UserProvider = ({ children }) => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(userData),
     });
+
     if (data.status === STATUS.FAIL) {
-      // :P:: TODO: add error toast
-      return data;
+      return {
+        ...data,
+        message: MESSAGES[data.type],
+      };
     }
 
     setToken(data.token);
+    return { status: STATUS.SUCCESS };
     // :P:: TODO: make request to get info on self
   };
   const logout = () => {
+    // :P:: TODO: call endoint?
     setUser({ ...initialState });
     clearToken();
   };

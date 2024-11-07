@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Box,
@@ -8,24 +8,60 @@ import {
   Input,
   Heading,
   VStack,
+  useToast,
 } from "@chakra-ui/react";
 
 import { UserContext } from "../context/User";
-import { getToken } from "../utils/token";
+import { ROUTES, STATUS } from "../utils";
 
 const Login = () => {
   const { login } = useContext(UserContext);
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const toast = useToast();
+
+  const [loading, setLoading] = useState(false);
+  const [disableButton, setDisableButton] = useState(false);
+  const [loginData, setLoginData] = useState({
+    username: "",
+    password: "",
+  });
 
   const navigate = useNavigate();
 
+  const handleInput = (e) => {
+    setLoginData((prevState) => ({
+      ...prevState,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
   const handleLogin = async (e) => {
     e.preventDefault();
-    // :P:: TODO: add a loading state
-    await login({ username, password });
-    if (getToken()) navigate("/home");
+    setLoading(true);
+    
+    const response = await login(loginData);
+    setLoading(false);
+    
+    const toastOptions = {
+      title: "Login failed",
+      description: response.message || "login error",
+      status: "error",
+      duration: 5000,
+      isClosable: true,
+    };
+
+    if (response.status === STATUS.SUCCESS) {
+      navigate(ROUTES.HOME);
+      toastOptions.title = "Login success!";
+      delete toastOptions.description;
+      toastOptions.status = "success";
+    }
+
+    toast(toastOptions);
   };
+
+  useEffect(() => {
+    setDisableButton(!loginData.username.length && !loginData.password.length);
+  }, [loginData.username, loginData.password]);
 
   return (
     <Box
@@ -53,19 +89,28 @@ const Login = () => {
               <FormLabel>Username</FormLabel>
               <Input
                 type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                name="username"
+                value={loginData.username}
+                onChange={handleInput}
               />
             </FormControl>
             <FormControl id="password">
               <FormLabel>Password</FormLabel>
               <Input
                 type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                name="password"
+                value={loginData.password}
+                onChange={handleInput}
               />
             </FormControl>
-            <Button type="submit" colorScheme="blue" width="full">
+            <Button
+              type="submit"
+              colorScheme="blue"
+              width="full"
+              disabled={disableButton || loading}
+              isLoading={loading}
+              loadingText="Logging in..."
+            >
               Login
             </Button>
           </VStack>

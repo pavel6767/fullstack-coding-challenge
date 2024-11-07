@@ -3,20 +3,17 @@ import React from "react";
 import Login from "./views/Login";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Home from "./views/Home";
+import { ROUTES } from "./utils";
 
 const routes = [
   {
-    path: "/",
+    path: ROUTES.LOGIN,
     element: <Login />,
   },
   {
-    path: "/home",
-    element: (
-      <ProtectedRoute>
-        <Home />
-      </ProtectedRoute>
-    ),
+    path: ROUTES.HOME,
+    element: <ProtectedRoute component={Home} />,
   },
 ];
 
-export default routes
+export default routes;

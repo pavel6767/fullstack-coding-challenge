@@ -1,11 +1,10 @@
 import React, { useEffect } from "react";
-import { useMakeRequest } from "../context/useMakeRequest";
+import makeRequest from "../utils/makeRequest";
 
-const Home = () => {
-  const { makeRequest } = useMakeRequest();
+const Home = ({compo}) => {
   useEffect(() => {
     makeRequest("/api/complaints/allComplaints/");
-  });
+  }, []);
   return (
     <div>
       <h1>welcome</h1>
