@@ -1,61 +1,77 @@
 import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import {
+  Box,
+  Button,
+  FormControl,
+  FormLabel,
+  Input,
+  Heading,
+  VStack,
+} from "@chakra-ui/react";
+
 import { UserContext } from "../context/User";
+import { getToken } from "../utils/token";
 
 const Login = () => {
-  const { setUser } = useContext(UserContext);
+  const { login } = useContext(UserContext);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    if (username === "user" && password === "password") {
-      // :P:: TODO: network call
-      setUser((prevState) => ({ ...prevState, id: "123" }));
-      navigate("/home");
-    } else {
-      alert("Invalid credentials");
-    }
+    // :P:: TODO: add a loading state
+    await login({ username, password });
+    if (getToken()) navigate("/home");
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100vh",
-      }}
+    <Box
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+      height="100vh"
+      bg="gray.50"
     >
-      <form onSubmit={handleLogin} style={{ textAlign: "center" }}>
-        <h2>Login</h2>
-        <div>
-          <label>
-            Username:
-            <input
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-            />
-          </label>
-        </div>
-        <div>
-          <label>
-            Password:
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </label>
-        </div>
-        <div>
-          <button type="submit">Login</button>
-        </div>
-      </form>
-    </div>
+      <Box
+        p={8}
+        maxWidth="400px"
+        w="80%"
+        borderWidth={1}
+        borderRadius={8}
+        boxShadow="lg"
+        bg="white"
+      >
+        <Heading mb={6} textAlign="center">
+          Login
+        </Heading>
+        <form onSubmit={handleLogin}>
+          <VStack spacing={4}>
+            <FormControl id="username">
+              <FormLabel>Username</FormLabel>
+              <Input
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+              />
+            </FormControl>
+            <FormControl id="password">
+              <FormLabel>Password</FormLabel>
+              <Input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </FormControl>
+            <Button type="submit" colorScheme="blue" width="full">
+              Login
+            </Button>
+          </VStack>
+        </form>
+      </Box>
+    </Box>
   );
 };
 export default Login;

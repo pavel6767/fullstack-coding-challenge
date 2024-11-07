@@ -1,10 +1,15 @@
-import React, { useContext } from "react";
-import { Navigate } from "react-router-dom";
-import { UserContext } from "../context/User";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { getToken } from "../utils/token";
 
 const ProtectedRoute = ({ children }) => {
-  const { user } = useContext(UserContext);
-  return user.id ? children : <Navigate to="/login" />;
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (getToken()) navigate("/home");
+    else navigate("/");
+  }, [navigate]);
+  // return token ? children : <Navigate to="/" />;
+  return children;
 };
 
 export default ProtectedRoute;
