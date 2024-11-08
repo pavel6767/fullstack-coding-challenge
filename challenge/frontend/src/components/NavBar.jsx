@@ -22,7 +22,7 @@ const Navbar = () => {
       <Flex align="center">
         <Box>
           <Text as="h1" fontSize="xl" color="white">
-            Complaints
+            Complaints App
           </Text>
         </Box>
         <Spacer />

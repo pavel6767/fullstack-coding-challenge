@@ -1,5 +1,5 @@
-import React, { createContext, useState } from "react";
-import { NETWORK_ERROR_TYPES, STATUS } from "../utils";
+import React, { createContext, useEffect, useState } from "react";
+import { LOGIN_MESSAGES, STATUS } from "../utils";
 import { clearToken, setToken } from "../utils/token";
 import makeRequest from "../utils/makeRequest";
 
@@ -14,14 +14,15 @@ const initialState = {
 
 export const UserContext = createContext({ ...initialState });
 
-const MESSAGES = {
-  [NETWORK_ERROR_TYPES.NOT_OK]:
-    "Please double check username and password or contact Support",
-  [NETWORK_ERROR_TYPES.ERROR]: "Error, please contact support",
-};
-
 export const UserProvider = ({ children }) => {
-  const [user, setUser] = useState(initialState);
+  const [user, setUser] = useState(() => {
+    const storedUser = localStorage.getItem("user");
+    return storedUser ? JSON.parse(storedUser) : { ...initialState };
+  });
+
+  useEffect(() => {
+    localStorage.setItem("user", JSON.stringify(user));
+  });
 
   const login = async (userData) => {
     const data = await makeRequest("/login/", {
@@ -33,7 +34,7 @@ export const UserProvider = ({ children }) => {
     if (data.status === STATUS.FAIL) {
       return {
         ...data,
-        message: MESSAGES[data.type],
+        message: LOGIN_MESSAGES[data.type],
       };
     }
 
