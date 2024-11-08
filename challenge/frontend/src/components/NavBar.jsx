@@ -7,9 +7,9 @@ import { ROUTES } from "../utils";
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const { logout } = useContext(UserContext);
+  const { user, logout } = useContext(UserContext);
   const [loading, setLoading] = useState(false);
-
+  
   const handleLogOut = async () => {
     setLoading(true);
     await logout();
@@ -26,6 +26,9 @@ const Navbar = () => {
           </Text>
         </Box>
         <Spacer />
+        <Text fontSize="md" color="white" mr={4}>
+          Hi, {user.full_name}
+        </Text>
         <Button
           onClick={handleLogOut}
           isLoading={loading}

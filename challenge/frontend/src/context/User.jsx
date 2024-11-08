@@ -5,7 +5,7 @@ import makeRequest from "../utils/makeRequest";
 
 const initialState = {
   id: "",
-  user: "",
+  username: "",
   full_name: "",
   district: "",
   party: "",
@@ -38,8 +38,9 @@ export const UserProvider = ({ children }) => {
     }
 
     setToken(data.token);
+    const responseUser = await makeRequest("/api/complaints/current-user");
+    setUser(responseUser);
     return { status: STATUS.SUCCESS };
-    // :P:: TODO: make request to get info on self
   };
   const logout = () => {
     // :P:: TODO: call endoint?

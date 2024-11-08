@@ -6,6 +6,7 @@ const makeRequest = async (url, options = {}) => {
   try {
     const response = await fetch(url, {
       ...options,
+      method: options.method ?? 'GET',
       headers: {
         ...options.headers,
         ...(token && { Authorization: `Token ${token}` }),
