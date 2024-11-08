@@ -22,8 +22,12 @@ export const ROUTES = {
 const COMPLAINTS_BASE_PATH = "/api/complaints";
 
 export const BE_ROUTES = {
-  all: `${COMPLAINTS_BASE_PATH}/`,
-  open: `${COMPLAINTS_BASE_PATH}/open`,
-  closed: `${COMPLAINTS_BASE_PATH}/closed`,
-  top: `${COMPLAINTS_BASE_PATH}/top`,
+  COMPLAINTS: {
+    ALL: `${COMPLAINTS_BASE_PATH}`,
+    OPEN: `${COMPLAINTS_BASE_PATH}/open`,
+    CLOSED: `${COMPLAINTS_BASE_PATH}/closed`,
+    TOP: `${COMPLAINTS_BASE_PATH}/top`,
+    CURRENT_USER: `${COMPLAINTS_BASE_PATH}/current-user`,
+  },
+  LOGIN: '/login/'
 };

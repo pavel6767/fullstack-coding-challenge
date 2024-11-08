@@ -40,23 +40,17 @@ const Login = () => {
     
     const response = await login(loginData);
     setLoading(false);
-    
-    const toastOptions = {
-      title: "Login failed",
-      description: response.message || "login error",
-      status: "error",
-      duration: 5000,
-      isClosable: true,
-    };
 
     if (response.status === STATUS.SUCCESS) {
       navigate(ROUTES.HOME);
-      toastOptions.title = "Login success!";
-      delete toastOptions.description;
-      toastOptions.status = "success";
+      toast({
+        title: "Login success!",
+        status: "success",
+        duration: 2500,
+        isClosable: true,
+      });
     }
 
-    toast(toastOptions);
   };
 
   useEffect(() => {

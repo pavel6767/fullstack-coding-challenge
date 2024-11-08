@@ -1,7 +1,7 @@
 import React, { createContext, useEffect, useState } from "react";
-import { LOGIN_MESSAGES, STATUS } from "../utils";
+import { BE_ROUTES, LOGIN_MESSAGES, STATUS } from "../utils";
 import { clearToken, setToken } from "../utils/token";
-import makeRequest from "../utils/makeRequest";
+import useMakeRequest from "../hooks/useMakeRequest";
 
 const initialState = {
   id: "",
@@ -20,26 +20,23 @@ export const UserProvider = ({ children }) => {
     return storedUser ? JSON.parse(storedUser) : { ...initialState };
   });
 
+  const { makeRequest } = useMakeRequest();
+
   useEffect(() => {
     localStorage.setItem("user", JSON.stringify(user));
   });
 
   const login = async (userData) => {
-    const data = await makeRequest("/login/", {
+    const data = await makeRequest(BE_ROUTES.LOGIN, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(userData),
     });
 
-    if (data.status === STATUS.FAIL) {
-      return {
-        ...data,
-        message: LOGIN_MESSAGES[data.type],
-      };
-    }
+    if (data.status === STATUS.FAIL) return data;
 
     setToken(data.token);
-    const responseUser = await makeRequest("/api/complaints/current-user");
+    const responseUser = await makeRequest(BE_ROUTES.COMPLAINTS.CURRENT_USER);
     setUser(responseUser);
     return { status: STATUS.SUCCESS };
   };
