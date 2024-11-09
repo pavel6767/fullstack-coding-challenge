@@ -8,10 +8,13 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ('id','username', 'first_name','last_name')
 
 class UserProfileSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source='user.username')
+    first_name = serializers.CharField(source='user.first_name')
+    last_name = serializers.CharField(source='user.last_name')
     # BONUS Task: Flatten out the User object inside of UserProfile.
     class Meta:
         model = UserProfile
-        fields = ('id','user','full_name','district','party','borough')
+        fields = ('id','user','full_name','district','party','borough', 'username', 'first_name', 'last_name')
 
 class ComplaintSerializer(serializers.ModelSerializer):
     class Meta:

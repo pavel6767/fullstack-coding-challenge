@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Heading, Text, Container } from "@chakra-ui/react";
+import { Box, Heading, Text, Container, Button } from "@chakra-ui/react";
 
 import CustomSpinner from "../components/CustomSpinner";
 
@@ -7,15 +7,20 @@ import useHomeLogic from "../hooks/useHomeLogic";
 import CommplaintsTable from "../components/ComplaintsTable";
 
 const Home = () => {
-  const { district, loading, openCases, closedCases, topComplaintType, complaints } =
-    useHomeLogic();
+  const {
+    district,
+    loading,
+    complaints: { allComplaints, topComplaintType, openCases, closedCases },
+    isFilterByAccount,
+    handleToggleClick,
+  } = useHomeLogic();
 
   if (loading) return <CustomSpinner />;
 
   return (
     <Container maxW="container.xl" p={4}>
       <Heading as="h1" mb={4}>
-        Dashboard
+        Main Dashboard
       </Heading>
       <Box mb={4}>
         <Text fontSize="lg">
@@ -40,9 +45,17 @@ const Home = () => {
 
       <Box>
         <Heading as="h2" size="lg" mb={4}>
-          All Complaints in District {district}
+          All Complaints {isFilterByAccount ? "in" : "by constituents of"}{" "}
+          District {district}
         </Heading>
-        <CommplaintsTable complaints={complaints} />
+        <Button onClick={handleToggleClick}>
+          {isFilterByAccount
+            ? "Complaints by My Constituents"
+            : "Complaints in My District"}
+        </Button>
+        <CommplaintsTable
+          {...{ complaints: allComplaints, isFilterByAccount }}
+        />
       </Box>
     </Container>
   );

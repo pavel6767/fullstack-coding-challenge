@@ -10,7 +10,7 @@ import {
   Tooltip,
 } from "@chakra-ui/react";
 
-const CommplaintsTable = ({ complaints }) => {
+const CommplaintsTable = ({ complaints, isFilterByAccount }) => {
   const truncateText = (text, maxLength = 30) => {
     if (text.length > maxLength) {
       return `${text.substring(0, maxLength)}...`;
@@ -36,7 +36,7 @@ const CommplaintsTable = ({ complaints }) => {
             <Text>City</Text>
             <Text>Zipcode</Text>
           </Th>
-          <Th>Filer's District</Th>
+          <Th>{isFilterByAccount ? "Filer's" : "Filing"} District</Th>
           <Th>Comm. Board</Th>
         </Tr>
       </Thead>
@@ -78,8 +78,8 @@ const CommplaintsTable = ({ complaints }) => {
                 {handleNull(complaint.zip)}
               </Text>
             </Td>
-            <Td aria-label={displayAriaLabel(complaint.council_dist)}>
-              {handleNull(complaint.council_dist)}
+            <Td aria-label={displayAriaLabel(isFilterByAccount ? complaint.council_dist : complaint.account)}>
+              {handleNull(isFilterByAccount ? complaint.council_dist : complaint.account)}
             </Td>
             <Td aria-label={displayAriaLabel(complaint.community_board)}>
               {handleNull(complaint.community_board)}

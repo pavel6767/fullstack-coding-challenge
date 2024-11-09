@@ -8,11 +8,11 @@ export const NETWORK_ERROR_TYPES = {
   ERROR: 'ERROR'
 }
 
-export const LOGIN_MESSAGES = {
-  [NETWORK_ERROR_TYPES.NOT_OK]:
-    "Please double check username and password or contact Support",
-  [NETWORK_ERROR_TYPES.ERROR]: "Error, please contact support",
-};
+// export const LOGIN_MESSAGES = {
+//   [NETWORK_ERROR_TYPES.NOT_OK]:
+//     "Please double check username and password or contact Support",
+//   [NETWORK_ERROR_TYPES.ERROR]: "Error, please contact support",
+// };
 
 export const ROUTES = {
   LOGIN: "/",
@@ -23,11 +23,12 @@ const COMPLAINTS_BASE_PATH = "/api/complaints";
 
 export const BE_ROUTES = {
   COMPLAINTS: {
-    ALL: `${COMPLAINTS_BASE_PATH}`,
-    OPEN: `${COMPLAINTS_BASE_PATH}/open`,
-    CLOSED: `${COMPLAINTS_BASE_PATH}/closed`,
-    TOP: `${COMPLAINTS_BASE_PATH}/top`,
+    ALL: `${COMPLAINTS_BASE_PATH}/allComplaints`,
+    OPEN: `${COMPLAINTS_BASE_PATH}/openCases/`,
+    CLOSED: `${COMPLAINTS_BASE_PATH}/closedCases/`,
+    TOP: `${COMPLAINTS_BASE_PATH}/topComplaints/`,
     CURRENT_USER: `${COMPLAINTS_BASE_PATH}/current-user`,
+    CONSTITUENT_COMPLAINTS: `${COMPLAINTS_BASE_PATH}/constituentComplaints/`,
   },
-  LOGIN: '/login/'
+  LOGIN: "/login/",
 };

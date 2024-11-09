@@ -1,5 +1,5 @@
 import React, { createContext, useEffect, useState } from "react";
-import { BE_ROUTES, LOGIN_MESSAGES, STATUS } from "../utils";
+import { BE_ROUTES, STATUS } from "../utils";
 import { clearToken, setToken } from "../utils/token";
 import useMakeRequest from "../hooks/useMakeRequest";
 
@@ -10,6 +10,8 @@ const initialState = {
   district: "",
   party: "",
   borough: "",
+  first_name: "",
+  last_name: "",
 };
 
 export const UserContext = createContext({ ...initialState });

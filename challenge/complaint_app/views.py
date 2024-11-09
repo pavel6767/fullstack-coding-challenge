@@ -12,47 +12,57 @@ class BaseComplaintViewSet(viewsets.ModelViewSet):
   permission_classes = [IsAuthenticated] 
   http_method_names = ['get'] 
   
-  def get_user_profile_data(self,request): 
+  def get_user_profile_data(self,request):
     user_profile = UserProfile.objects.get(user=request.user) 
     user_data = UserProfileSerializer(user_profile).data 
-    target_account = "NYCC" + user_data['district'].zfill(2) 
-    return user_data, target_account
+    user_district = "NYCC" + user_data['district'].zfill(2)
+    return user_data, user_district
+
+  def filter_complaints(self, **query):
+    current_complaints = Complaint.objects.filter(**query)
+    complaints_data = ComplaintSerializer(current_complaints, many=True).data
+    return complaints_data
 
 class ComplaintViewSet(BaseComplaintViewSet):
   def list(self, request):
     # Get all complaints from the user's district
-    _, target_account = self.get_user_profile_data(request)
-    district_complaints = Complaint.objects.filter(account=target_account)
-    complaints_data = ComplaintSerializer(district_complaints, many=True).data
+    _, user_district = self.get_user_profile_data(request)
+    complaints_data = self.filter_complaints(account=user_district)
     return Response(complaints_data)
 
 class OpenCasesViewSet(BaseComplaintViewSet):
   def list(self, request):
     # Get only the open complaints from the user's district
-    _, target_account = self.get_user_profile_data(request)
-    open_complaints = Complaint.objects.filter(account=target_account, opendate__isnull=False, closedate__isnull=True)
-    complaints_data = ComplaintSerializer(open_complaints, many=True).data
+    _, user_district = self.get_user_profile_data(request)
+    complaints_data = self.filter_complaints(account=user_district, opendate__isnull=False, closedate__isnull=True)
     return Response(complaints_data)
 
 class ClosedCasesViewSet(BaseComplaintViewSet):
   def list(self, request):
     # Get only complaints that are close from the user's district
-    _, target_account = self.get_user_profile_data(request)
-    closed_complaints = Complaint.objects.filter(account=target_account, closedate__isnull=False)
-    complaints_data = ComplaintSerializer(closed_complaints, many=True).data
+    _, user_district = self.get_user_profile_data(request)
+    complaints_data = self.filter_complaints(account=user_district, closedate__isnull=False)
     return Response(complaints_data)
     
 class TopComplaintTypeViewSet(BaseComplaintViewSet):
   def list(self, request):
     # Get the top 3 complaint types from the user's district
-    _, target_account = self.get_user_profile_data(request)
-    district_complaints = Complaint.objects.filter(account=target_account)
+    _, user_district = self.get_user_profile_data(request)
+    district_complaints = Complaint.objects.filter(account=user_district)
     complaint_type_counts = district_complaints.values('complaint_type').annotate(count=Count('complaint_type')).order_by('-count')[:3]
 
     top_complaint_types = list(complaint_type_counts) 
     return Response(top_complaint_types)
-  
+
 class UserProfileViewSet(BaseComplaintViewSet):
   def list(self, request):
+    # get user data
     user_data,_ = self.get_user_profile_data(request)
     return Response(user_data)
+
+class ResidentComplaintViewSet(BaseComplaintViewSet):
+  def list(self, request):
+    # get complaints made by residents that share same district as user
+    _, user_district = self.get_user_profile_data(request)
+    complaints_data = self.filter_complaints(council_dist=user_district)
+    return Response(complaints_data)
