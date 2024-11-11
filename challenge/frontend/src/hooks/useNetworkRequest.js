@@ -1,16 +1,17 @@
 import { useToast } from "@chakra-ui/react";
-import { NETWORK_ERROR_TYPES, STATUS } from "../utils";
+import { NETWORK_ERROR_TYPES, STATUS, TOAST_STATUS } from "../utils";
 import { getToken } from "../utils/token";
 
-const useMakeRequest = () => {
+const useNetworkRequest = () => {
   const toast = useToast();
-  const showErrorToast = (url) => toast({
-    title: "Error",
-    description: `error with endpoint ${url}, please check with support`,
-    status: "error",
-    duration: 5000,
-    isClosable: true,
-  });
+  const showToast = ({ title, status, description }) =>
+    toast({
+      title,
+      description,
+      status,
+      duration: 2500,
+      isClosable: true,
+    });
 
   const makeRequest = async (url, options = {}) => {
     const token = getToken();
@@ -28,12 +29,15 @@ const useMakeRequest = () => {
       });
 
       if (!response.ok) {
-        console.error("HTTP error:", response.statusText, {
+        console.error("makeRequest error:", response.statusText, {
           url,
           status: response.status,
         });
-        showErrorToast(url);
-
+        showToast({
+          title: "Error",
+          status: TOAST_STATUS.ERROR,
+          description: `error with this request, please try again`,
+        });
         return {
           status: STATUS.FAIL,
           type: NETWORK_ERROR_TYPES.NOT_OK,
@@ -43,13 +47,21 @@ const useMakeRequest = () => {
       const data = await response.json();
       return data;
     } catch (error) {
-      showErrorToast(url);
+      console.error("makeRequest error:", {
+        url,
+        message: error.message,
+      });
+      showToast({
+        title: "Error",
+        status: TOAST_STATUS.ERROR,
+        description: `error with endpoint ${url}, please check with support`,
+      });
       return {
         status: STATUS.FAIL,
         type: NETWORK_ERROR_TYPES.ERROR,
       };
     }
   };
-  return { makeRequest };
+  return { makeRequest, showToast };
 };
-export default useMakeRequest;
+export default useNetworkRequest;

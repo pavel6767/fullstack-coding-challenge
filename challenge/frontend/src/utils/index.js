@@ -8,11 +8,10 @@ export const NETWORK_ERROR_TYPES = {
   ERROR: 'ERROR'
 }
 
-// export const LOGIN_MESSAGES = {
-//   [NETWORK_ERROR_TYPES.NOT_OK]:
-//     "Please double check username and password or contact Support",
-//   [NETWORK_ERROR_TYPES.ERROR]: "Error, please contact support",
-// };
+export const TOAST_STATUS = {
+  ERROR: 'error',
+  SUCCESS: 'success'
+}
 
 export const ROUTES = {
   LOGIN: "/",

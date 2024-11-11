@@ -8,7 +8,6 @@ import {
   Input,
   Heading,
   VStack,
-  useToast,
 } from "@chakra-ui/react";
 
 import { UserContext } from "../context/User";
@@ -16,7 +15,6 @@ import { ROUTES, STATUS } from "../utils";
 
 const Login = () => {
   const { login } = useContext(UserContext);
-  const toast = useToast();
 
   const [loading, setLoading] = useState(false);
   const [disableButton, setDisableButton] = useState(false);
@@ -37,20 +35,17 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
-    
+
     const response = await login(loginData);
     setLoading(false);
 
     if (response.status === STATUS.SUCCESS) {
       navigate(ROUTES.HOME);
-      toast({
-        title: "Login success!",
-        status: "success",
-        duration: 2500,
-        isClosable: true,
+      setLoginData({
+        username: "",
+        password: "",
       });
     }
-
   };
 
   useEffect(() => {

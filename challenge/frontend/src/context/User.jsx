@@ -1,7 +1,7 @@
 import React, { createContext, useEffect, useState } from "react";
-import { BE_ROUTES, STATUS } from "../utils";
+import { BE_ROUTES, STATUS, TOAST_STATUS } from "../utils";
 import { clearToken, setToken } from "../utils/token";
-import useMakeRequest from "../hooks/useMakeRequest";
+import useNetworkRequest from "../hooks/useNetworkRequest";
 
 const initialState = {
   id: "",
@@ -22,7 +22,7 @@ export const UserProvider = ({ children }) => {
     return storedUser ? JSON.parse(storedUser) : { ...initialState };
   });
 
-  const { makeRequest } = useMakeRequest();
+  const { makeRequest, showToast } = useNetworkRequest();
 
   useEffect(() => {
     localStorage.setItem("user", JSON.stringify(user));
@@ -40,6 +40,11 @@ export const UserProvider = ({ children }) => {
     setToken(data.token);
     const responseUser = await makeRequest(BE_ROUTES.COMPLAINTS.CURRENT_USER);
     setUser(responseUser);
+
+    showToast({
+      title: "Login success!",
+      status: TOAST_STATUS.SUCCESS,
+    });
     return { status: STATUS.SUCCESS };
   };
   const logout = () => {
