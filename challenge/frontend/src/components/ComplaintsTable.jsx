@@ -23,8 +23,16 @@ const CommplaintsTable = ({ complaints, isFilterByAccount }) => {
   };
 
   const handleNull = (text) => text || "---";
-
   const displayAriaLabel = (field) => (field ? undefined : "Not available");
+  const formatDate = (d) => {
+    if (!d) return "";
+    const date = new Date(d);
+    return new Intl.DateTimeFormat("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    }).format(date);
+  };
 
   return (
     <Box>
@@ -57,8 +65,8 @@ const CommplaintsTable = ({ complaints, isFilterByAccount }) => {
                 <Td>{complaint.unique_key}</Td>
                 {[
                   complaint.complaint_type,
-                  complaint.opendate,
-                  complaint.closedate,
+                  formatDate(complaint.opendate),
+                  formatDate(complaint.closedate),
                 ].map((value, vInx) => (
                   <TableCell
                     {...{ key: `${complaint.unique_key}-${vInx}-left`, value }}
