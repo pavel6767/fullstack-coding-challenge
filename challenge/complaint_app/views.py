@@ -13,8 +13,8 @@ class BaseComplaintViewSet(viewsets.ModelViewSet):
   http_method_names = ['get'] 
   
   def get_user_profile_data(self,request):
-    user_profile = UserProfile.objects.get(user=request.user) 
-    user_data = UserProfileSerializer(user_profile).data 
+    user_profile = UserProfile.objects.get(user=request.user)
+    user_data = UserProfileSerializer(user_profile).data
     user_district = "NYCC" + user_data['district'].zfill(2)
     return user_data, user_district
 
@@ -57,7 +57,7 @@ class TopComplaintTypeViewSet(BaseComplaintViewSet):
 class UserProfileViewSet(BaseComplaintViewSet):
   def list(self, request):
     # get user data
-    user_data,_ = self.get_user_profile_data(request)
+    user_data, _ = self.get_user_profile_data(request)
     return Response(user_data)
 
 class ResidentComplaintViewSet(BaseComplaintViewSet):
@@ -66,3 +66,24 @@ class ResidentComplaintViewSet(BaseComplaintViewSet):
     _, user_district = self.get_user_profile_data(request)
     complaints_data = self.filter_complaints(council_dist=user_district)
     return Response(complaints_data)
+
+# :P: alternate
+# class ResidentComplaintViewSet(BaseComplaintViewSet):
+#   def list(self, request):
+#     # get complaints made by residents that share same district as user
+#     _, user_district = self.get_user_profile_data(request)
+#     all_complaints = Complaint.objects.filter(council_dist=user_district)
+#     open_cases_data = self.filter_complaints(council_dist=user_district, opendate__isnull=False, closedate__isnull=True)
+#     closed_cases_data = self.filter_complaints(council_dist=user_district, closedate__isnull=False)
+
+#     complaint_type_counts = all_complaints.values('complaint_type').annotate(count=Count('complaint_type')).order_by('-count')[:3]
+#     top_complaint_types = list(complaint_type_counts)
+
+#     all_complaints_data = ComplaintSerializer(all_complaints, many=True).data
+
+#     return Response({
+#       'all_complaints': all_complaints_data,
+#       'open_cases': open_cases_data,
+#       'closed_cases': closed_cases_data,
+#       'top_complaint_types': top_complaint_types
+#     })
