@@ -33,6 +33,7 @@ We’ve set up some starter code for you to use. For this challenge you will be 
 5. Inside of the React app (`fullstack-coding-challenge/challenge/frontend`), run `npm install` to get all of your frontend dependencies.
 6. From there you should be able to start your frontend and backend using `npm start` and `python manage.py runserver`, respectively.
 
+
 ## The API endpoints
 `localhost:8000`
 
